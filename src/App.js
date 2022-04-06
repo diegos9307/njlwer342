@@ -7,20 +7,16 @@ class App extends Component {
     super();
     this.state = {
       frase: "",
+      tareas: [],
     };
-    this.handleChange = this.handleChange.bind(this);
   }
-  handleChange(e) {
+
+  handleSubmit(e) {
+    e.preventDefault();
     this.setState({
-      frase: e.target.value,
+      tareas: [...this.state.tareas, this.state.frase],
+      frase: "",
     });
-    if (e.key === "Enter") {
-      let $capture = document.querySelector(".todo");
-      let $create = document.createElement("li");
-      $create.textContent = `${this.state.frase}`;
-      $capture.appendChild($create);
-      e.target.value = null;
-    }
   }
   render() {
     return (
@@ -31,10 +27,18 @@ class App extends Component {
             <li>Sacar la ropa</li>
             <li>Hacer la cama</li>
             <li>Leer un rato</li>
+            {this.state.tareas.map((tarea, index) => (
+              <li key={index}>{tarea}</li>
+            ))}
           </ul>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit.bind(this)}>
             <input
-              onKeyUp={this.handleChange}
+              value={this.state.frase}
+              onChange={(e) => {
+                this.setState({
+                  frase: e.target.value,
+                });
+              }}
               type="text"
               id="new-task"
               placeholder="Ingresa una tarea y oprime Enter"
@@ -43,9 +47,6 @@ class App extends Component {
         </div>
       </div>
     );
-  }
-  handleSubmit(e) {
-    e.preventDefault();
   }
 }
 
